@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "com.example.demo.model.Contact" table = "contact">
+
+        <meta attribute = "class-description">
+            This class contains the Contact detail.
+        </meta>
+
+        <id name = "contactId" type = "int" column = "contact_id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "fName" column = "fname" type = "string"/>
+        <property name = "mName" column = "mname" type = "string"/>
+        <property name = "lName" column = "lname" type = "string"/>
+
+    </class>
+</hibernate-mapping>

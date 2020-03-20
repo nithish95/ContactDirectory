@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "com.example.demo.model.Address" table = "address">
+
+        <meta attribute = "class-description">
+            This class contains the Address detail.
+        </meta>
+
+        <id name = "addressId" type = "int" column = "address_id">
+            <generator class="native"/>
+        </id>
+        <many-to-one name="Contact" class="com.example.demo.model.Contact"
+                     not-null="true" column="contact_id" unique="true" cascade="all"></many-to-one>
+        <property name = "address" column = "address" type = "string"/>
+        <property name = "addressType" column = "address_type" type = "string"/>
+        <property name = "city" column = "city" type = "string"/>
+        <property name = "state" column = "state" type = "string"/>
+        <property name = "zip" column = "zip" type = "string"/>
+
+    </class>
+</hibernate-mapping>
