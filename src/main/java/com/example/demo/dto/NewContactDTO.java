@@ -7,6 +7,16 @@ import com.example.demo.model.Phone;
 import java.util.List;
 
 public class NewContactDTO {
+    private int contactId;
+
+    public int getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
+    }
+
     private String fname;
 
     private String mname;

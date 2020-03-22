@@ -31,6 +31,23 @@ public class ContactService {
         return contactDAO.deleteContact(id);
     }
 
+    public boolean deleteAddress(int id){
+        return contactDAO.deleteAddress(id);
+    }
+
+    public boolean deletePhone(int id){
+        return contactDAO.deletePhone(id);
+    }
+
+    public boolean deleteDate(int id){
+        return contactDAO.deleteDate(id);
+    }
+
+
+    public boolean update(NewContactDTO newContactDTO){
+        return contactDAO.update(newContactDTO);
+    }
+
     public NewContactDTO getFullDetails(int id){
         NewContactDTO newContactDTO = new NewContactDTO();
         Contact contact = contactDAO.getContact(id);

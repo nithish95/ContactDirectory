@@ -83,6 +83,154 @@ public class ContactDAO {
         return query.getResultList();
     }
 
+    public void updateAddress(Session session,Address address){
+        Query query = session.createQuery("update Address set " +
+                "address = :address, city = :city, state = :state, zip = :zip, addressType = :addressType"+
+                " where addressId = :addressId");
+        query.setParameter("addressId", address.getAddressId());
+        query.setParameter("city",address.getCity());
+        query.setParameter("state",address.getState());
+        query.setParameter("addressType",address.getAddressType());
+        query.setParameter("address",address.getAddress());
+        query.setParameter("zip",address.getZip());
+        query.executeUpdate();
+    }
+
+    public void updateContact(Session session,NewContactDTO newContactDTO){
+        Query query = session.createQuery("update Contact set " +
+                "fName = :fName, mName = :mName, lName = :lName"+
+                " where contactId = :contactId");
+        query.setParameter("fName", newContactDTO.getFname());
+        query.setParameter("mName",newContactDTO.getMname());
+        query.setParameter("lName",newContactDTO.getLname());
+        query.setParameter("contactId",newContactDTO.getContactId());
+        query.executeUpdate();
+    }
+
+    public boolean update(NewContactDTO newContactDTO){
+        Configuration config = new Configuration();
+        SessionFactory sessionFactory = config.configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            if(newContactDTO.getFname()!=null || newContactDTO.getMname()!=null || newContactDTO.getLname()!=null){
+                updateContact(session,newContactDTO);
+            }
+            List<Address> addressList = newContactDTO.getAddresses();
+            if (addressList != null) {
+                for (int i = 0; i < addressList.size(); i++) {
+                    if (addressList.get(i).getAddressId() > 0) {
+                        updateAddress(session, addressList.get(i));
+                    } else {
+                        session.save(addressList.get(i));
+                    }
+                }
+            }
+
+            List<Phone> phoneList = newContactDTO.getPhones();
+            if(phoneList!=null) {
+                for (int i = 0; i < phoneList.size(); i++) {
+                    if (phoneList.get(i).getPhoneId() > 0) {
+                        updatePhone(session, phoneList.get(i));
+                    } else {
+                        session.save(phoneList.get(i));
+                    }
+                }
+            }
+
+            List<Date> dateList = newContactDTO.getDates();
+            if(dateList!=null) {
+                for (int i = 0; i < dateList.size(); i++) {
+                    if (dateList.get(i).getDateId() > 0) {
+                        updateDate(session, dateList.get(i));
+                    } else {
+                        session.save(dateList.get(i));
+                    }
+                }
+            }
+            transaction.commit();
+            return true;
+        }catch (Exception e) {
+            transaction.rollback();
+            System.out.println("Error occured while Updation ---"+e);
+            return false;
+        }
+    }
+
+    public void updatePhone(Session session,Phone phone){
+            Query query = session.createQuery("update Phone set " +
+                    "number = :number, phoneType = :phoneType, areaCode = :areaCode "+
+                    " where phoneId = :phoneId");
+            query.setParameter("phoneId", phone.getPhoneId());
+            query.setParameter("areaCode",phone.getAreaCode());
+            query.setParameter("number",phone.getNumber());
+            query.setParameter("phoneType",phone.getPhoneType());
+            query.executeUpdate();
+    }
+
+    public void updateDate(Session session,Date date){
+            Query query = session.createQuery("update Date set " +
+                    "date = :date, dateType = :dateType"+
+                    " where dateId = :dateId");
+            query.setParameter("dateId", date.getDateId());
+            query.setParameter("date",date.getDate());
+            query.setParameter("dateType",date.getDateType());
+            query.executeUpdate();
+    }
+
+    public boolean deleteAddress(int id){
+        Configuration config = new Configuration();
+        SessionFactory sessionFactory = config.configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            String hql = "Delete from Address a where a.addressId="+id;
+            Query query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            System.out.println("Error occured while address deletion ---"+e);
+            return false;
+        }
+    }
+
+    public boolean deletePhone(int id){
+        Configuration config = new Configuration();
+        SessionFactory sessionFactory = config.configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            String hql = "Delete from Phone p where p.phoneId="+id;
+            Query query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            System.out.println("Error occured while phone deletion ---"+e);
+            return false;
+        }
+    }
+
+    public boolean deleteDate(int id){
+        Configuration config = new Configuration();
+        SessionFactory sessionFactory = config.configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            String hql = "Delete from Date d where d.dateId="+id;
+            Query query = session.createQuery(hql);
+            query.executeUpdate();
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            transaction.rollback();
+            System.out.println("Error occured while date deletion ---"+e);
+            return false;
+        }
+    }
 
     public boolean deleteContact(int id){
         Configuration config = new Configuration();
@@ -92,7 +240,7 @@ public class ContactDAO {
         try {
             String hql = "Delete from Contact c where c.contactId="+id;
             Query query = session.createQuery(hql);
-            System.out.println(query.executeUpdate());
+            query.executeUpdate();
             transaction.commit();
             return true;
         } catch (Exception e) {
